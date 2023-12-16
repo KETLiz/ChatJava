@@ -85,7 +85,6 @@ public class ServerWindow extends JFrame {
         if(isServerWorking()) {
             clients.add(client);
             jt.append("Клиент " + client.getName() + " подключился к беседе\n");
-            System.out.print(client.getName().getClass());
         } else {
             jt.append("Сервер не запущен\n");
         }
