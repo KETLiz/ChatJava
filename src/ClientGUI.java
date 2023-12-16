@@ -14,12 +14,13 @@ public class ClientGUI extends JFrame {
     JTextArea userPassword = new JTextArea("Введите пароль: ");
     JButton login = new JButton("login");
     JButton btnSend = new JButton("send");
-    JTextArea messageArea = new JTextArea("");
-    JTextArea allMessages;
+    JTextArea messageArea = new JTextArea(""); // окно, где клиент пишет сообщение
+    JTextArea allMessages; // окно, где все сообщения
 
     public ClientGUI(ServerWindow serverWindow) {
         this.server = serverWindow;
         setSize(WINDOW_HEIGHT, WINDOW_WIDTH);
+        setLocation(server.getX() - 450, server.getY());
         createPanels();
         setVisible(true);
     }
@@ -45,6 +46,12 @@ public class ClientGUI extends JFrame {
         JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.add(messageArea);
         southPanel.add(btnSend, BorderLayout.EAST);
+        btnSend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                sendMessage();
+            }
+        });
         return southPanel;
     }
 
@@ -60,17 +67,13 @@ public class ClientGUI extends JFrame {
 
     /**
      * Метод отправки сообщения подключённым пользователям и на сервер
-     * @param message
      */
-    public void sendMessage(String message) {
-        btnSend.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(server.isServerWorking()) {
-
-                }
-            }
-        });
+    private void sendMessage() {
+        String message = messageArea.getText();
+        if(server.isServerWorking()) {
+            allMessages.append(message + "\n");
+            server.jt.append(message + "\n");
+        }
     }
 
     /**
