@@ -90,4 +90,11 @@ public class ServerWindow extends JFrame {
         }
     }
 
+    /**
+     * Получение списка подключённых клиентов
+     * @return List<ClientGUI>
+     */
+    public List<ClientGUI> getClients() {
+        return clients;
+    }
 }

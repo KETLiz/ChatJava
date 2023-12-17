@@ -16,6 +16,7 @@ public class ClientGUI extends JFrame {
     JButton btnSend = new JButton("send");
     JTextArea messageArea = new JTextArea(""); // окно, где клиент пишет сообщение
     JTextArea allMessages; // окно, где все сообщения
+    SaveMessageToFile save = new SaveMessageToFile();
 
     public ClientGUI(ServerWindow serverWindow) {
         this.server = serverWindow;
@@ -71,8 +72,9 @@ public class ClientGUI extends JFrame {
     private void sendMessage() {
         String message = messageArea.getText();
         if(server.isServerWorking()) {
-            allMessages.append(message + "\n");
-            server.jt.append(message + "\n");
+            server.jt.append(getName() + ": " + message + "\n");
+            sendMessageForAllUsers(getName() + ": " + message + "\n");
+            save.saveToLogs(getName() + ": " + message);
         }
     }
 
@@ -97,6 +99,11 @@ public class ClientGUI extends JFrame {
         });
     }
 
+    /**
+     * Метод проверки валиднсти имени. Надо доработать
+     * @param nameFromTextArea имя пользователя
+     * @return boolean
+     */
     private boolean isValidName(JTextArea nameFromTextArea) {
         name = nameFromTextArea.getText();
         if(name != null) {
@@ -119,7 +126,17 @@ public class ClientGUI extends JFrame {
         server.addClientGUIToClients(this);
     }
 
-    public String sentName() {
+    /**
+     * Метод отправки сообщений всем подключённым пользователям
+     * @return
+     */
+    private void sendMessageForAllUsers(String message) {
+        for(ClientGUI client : server.getClients()) {
+            client.allMessages.append(message);
+        }
+    }
+
+    public String getName() {
         return name;
     }
 }
