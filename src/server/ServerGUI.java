@@ -19,6 +19,10 @@ public class ServerGUI extends JFrame implements ViewServer {
         server = new Server(this);
     }
 
+    public Server getServer() {
+        return server;
+    }
+
     /**
      * Создание окошка
      */
@@ -72,6 +76,7 @@ public class ServerGUI extends JFrame implements ViewServer {
         return jt;
     }
 
+
     @Override
     public boolean showStatus() {
         return server.getStatus();
@@ -85,5 +90,15 @@ public class ServerGUI extends JFrame implements ViewServer {
     @Override
     public void startServer() {
         server.startServer();
+    }
+
+    @Override
+    public void addClient(String name) {
+        jt.append(name + " подключился к беседе\n");
+    }
+
+    @Override
+    public void receiveMessage(String message) {
+        jt.append(message);
     }
 }

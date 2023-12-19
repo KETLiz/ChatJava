@@ -1,8 +1,12 @@
 package client;
 
-public interface View {
+public interface ViewClient {
     void sendMessage(String message);
+
     void connectedToServer();
+
     void disconnectedFromServer();
+
+    String getMessage();
 
 }

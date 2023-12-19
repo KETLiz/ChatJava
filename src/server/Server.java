@@ -1,6 +1,8 @@
 package server;
 
 import client.Client;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
@@ -10,6 +12,7 @@ public class Server {
 
     public Server(ViewServer view) {
         this.view = view;
+        clients = new ArrayList<>();
     }
 
     /**
@@ -36,4 +39,40 @@ public class Server {
         System.exit(0);
     }
 
+    /**
+     * Добавление клиента к списку подключённых клиентов
+     * @param client
+     */
+    public void connectClient(Client client) {
+        String login = client.getLogin();
+        clients.add(client);
+        view.addClient(login);
+    }
+
+    public void sendMessageToAll(String message) {
+        receiveMessage(message);
+        sendMessageToConnectedClients(message);
+    }
+
+    /**
+     * Отправка сообщения на окно сервера
+     * @param message
+     */
+    public void receiveMessage(String message) {
+        view.receiveMessage(message);
+    }
+
+    public void sendMessageToConnectedClients(String message) {
+        for(Client client : clients) {
+            client.sendMessage(message);
+        }
+    }
+
+    /**
+     * Получаем список подключённых клиентов к серверу
+     * @return clients
+     */
+    public List<Client> getClients() {
+        return clients;
+    }
 }

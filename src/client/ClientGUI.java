@@ -6,24 +6,28 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ClientGUI extends JFrame implements View {
-    ServerGUI server;
+public class ClientGUI extends JFrame implements ViewClient {
+    private Client client;
     private static final int WINDOW_HEIGHT = 400;
     private static final int WINDOW_WIDTH = 300;
-    JTextArea idServer, portServer, userName, userPassword, messagesArea, messageArea;
+    JTextArea idServer, portServer, userName, userPassword, messagesArea, sendMessageArea;
     JPanel northPanel, southPanel;
     JButton login, btnSend;
     JTextArea allMessages; // окно, где все сообщения
 
-    public ClientGUI(ServerGUI server){
-        setSize(WINDOW_HEIGHT, WINDOW_WIDTH);
-        setLocation(server.getX() - 400, server.getY());
-        createWindow();
+    public ClientGUI(ServerGUI serverGui){
+        createWindow(serverGui);
+        client = new Client(this, serverGui.getServer());
 
         setVisible(true);
     }
 
-    private void createWindow() {
+    /**
+     * Создание всего окна клиента
+     */
+    private void createWindow(ServerGUI serverGui) {
+        setSize(WINDOW_HEIGHT, WINDOW_WIDTH);
+        setLocation(serverGui.getX() - 400, serverGui.getY());
         add(createNorthPanel(), BorderLayout.NORTH);
         add(createCentrePanel());
         add(createSourthPanel(), BorderLayout.SOUTH);
@@ -42,7 +46,7 @@ public class ClientGUI extends JFrame implements View {
         login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                connectedToServer();
             }
         });
 
@@ -70,9 +74,16 @@ public class ClientGUI extends JFrame implements View {
      */
     private Component createSourthPanel() {
         southPanel = new JPanel(new BorderLayout());
-        messageArea = new JTextArea("");
+        sendMessageArea = new JTextArea("");
         btnSend = new JButton("send");
-        southPanel.add(messageArea);
+        btnSend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                client.sendMessageToServer(sendMessageArea.getText());
+                sendMessageArea.setText("");
+            }
+        });
+        southPanel.add(sendMessageArea);
         southPanel.add(btnSend, BorderLayout.EAST);
 
         return southPanel;
@@ -80,16 +91,23 @@ public class ClientGUI extends JFrame implements View {
 
     @Override
     public void sendMessage(String message) {
-
+        messagesArea.append(message);
     }
 
     @Override
     public void connectedToServer() {
-
+        if(client.connectToServer(userName.getText())) {
+            northPanel.setVisible(false);
+        }
     }
 
     @Override
     public void disconnectedFromServer() {
 
+    }
+
+    @Override
+    public String getMessage() {
+        return sendMessageArea.getText();
     }
 }

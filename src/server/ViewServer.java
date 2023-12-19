@@ -5,4 +5,7 @@ public interface ViewServer {
     void stopServer();
     void startServer();
 
+    void addClient(String name);
+    void receiveMessage(String message);
+
 }
