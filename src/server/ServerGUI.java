@@ -1,5 +1,8 @@
 package server;
 
+import log.ReadFromFileTxt;
+import log.WriteMessagesToFileTxt;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,11 +15,12 @@ public class ServerGUI extends JFrame implements ViewServer {
     JTextArea jt; // поле со всеми сообщениями
     JPanel panel; // нижняя панелька с кнопками
     JButton btnStart, btnStop; // кнопки старта и стоп
+    ReadFromFileTxt readLog = new ReadFromFileTxt();
 
     public ServerGUI() {
         setting();
         setVisible(true);
-        server = new Server(this);
+        server = new Server(this, new WriteMessagesToFileTxt(), readLog);
     }
 
     public Server getServer() {
@@ -51,6 +55,10 @@ public class ServerGUI extends JFrame implements ViewServer {
                 } else {
                     startServer();
                     jt.append("Сервер запущен!\n");
+                    String logs = server.getLog();
+                    if(logs != null) {
+                        server.receiveMessage(logs);
+                    }
                 }
             }
         });
@@ -99,6 +107,11 @@ public class ServerGUI extends JFrame implements ViewServer {
 
     @Override
     public void receiveMessage(String message) {
+        jt.append(message);
+    }
+
+    @Override
+    public void disconnectClient(String message) {
         jt.append(message);
     }
 }

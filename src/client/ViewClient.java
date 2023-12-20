@@ -9,4 +9,6 @@ public interface ViewClient {
 
     String getMessage();
 
+    void answerFromServer(String messages);
+
 }

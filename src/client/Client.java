@@ -46,12 +46,29 @@ public class Client {
     public void sendMessage(String message) {
         view.sendMessage(message);
     }
-    public String getMessage() {
+
+    /**
+     * Отправка сохранённой переписки с сервера на клиент
+     */
+    public void answerFromServer() {
+        String message = server.getLog();
+        if(message != null) {
+            view.answerFromServer(message);
+        }
+    }
+    public String reseiveMessagesFromLog(String messages) {
         return view.getMessage();
     }
 
     public String getLogin() {
         return login;
+    }
+
+    public void disconnectFromServer() {
+        if(connected) {
+            connected = false;
+            server.disconnectClient(this);
+        }
     }
 
 }

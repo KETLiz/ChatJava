@@ -5,6 +5,7 @@ import server.ServerGUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 public class ClientGUI extends JFrame implements ViewClient {
     private Client client;
@@ -47,6 +48,8 @@ public class ClientGUI extends JFrame implements ViewClient {
             @Override
             public void actionPerformed(ActionEvent e) {
                 connectedToServer();
+
+                client.answerFromServer();
             }
         });
 
@@ -103,11 +106,24 @@ public class ClientGUI extends JFrame implements ViewClient {
 
     @Override
     public void disconnectedFromServer() {
+        client.disconnectFromServer();
+    }
 
+    @Override
+    protected void processWindowEvent(final WindowEvent e) {
+        super.processWindowEvent(e);
+        if(e.getID() == WindowEvent.WINDOW_CLOSING) {
+            disconnectedFromServer();
+        }
     }
 
     @Override
     public String getMessage() {
         return sendMessageArea.getText();
+    }
+
+    @Override
+    public void answerFromServer(String messages) {
+        messagesArea.append(messages);
     }
 }
